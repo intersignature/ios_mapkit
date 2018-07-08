@@ -15,6 +15,32 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     @IBOutlet weak var speedLb: UILabel!
     @IBOutlet weak var addressLb: UILabel!
     
+    var latitudeDelta:CLLocationDegrees = 0.01
+    var longtitudeDelta:CLLocationDegrees = 0.01
+    
+    
+    
+    @IBAction func zoomOut(_ sender: UIButton) {
+        latitudeDelta = mMapView.region.span.latitudeDelta * 2
+        longtitudeDelta = mMapView.region.span.longitudeDelta * 2
+        
+        let span = MKCoordinateSpanMake(latitudeDelta, longtitudeDelta)
+        let region = MKCoordinateRegionMake(mMapView.region.center, span)
+        
+        mMapView.setRegion(region, animated: true)
+    }
+    
+    @IBAction func zoomIn(_ sender: UIButton) {
+        latitudeDelta = mMapView.region.span.latitudeDelta / 2
+        longtitudeDelta = mMapView.region.span.longitudeDelta / 2
+        
+        let span = MKCoordinateSpanMake(latitudeDelta, longtitudeDelta)
+        let region = MKCoordinateRegionMake(mMapView.region.center, span)
+        
+        mMapView.setRegion(region, animated: true)
+        
+    }
+    
     var mLocationManager = CLLocationManager()
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -23,7 +49,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         let latitude: CLLocationDegrees = myLocation.coordinate.latitude
         let longtitude:CLLocationDegrees = myLocation.coordinate.longitude
         
-        let span:MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+        let span:MKCoordinateSpan = MKCoordinateSpan(latitudeDelta: latitudeDelta, longitudeDelta: longtitudeDelta)
         let location:CLLocationCoordinate2D = CLLocationCoordinate2DMake(latitude, longtitude)
         
         let region:MKCoordinateRegion = MKCoordinateRegionMake(location, span)

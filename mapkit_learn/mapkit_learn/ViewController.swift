@@ -113,6 +113,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
         if annotation.isKind(of: MKUserLocation.self){
             return nil
+        } else if annotation.isKind(of: AnnoGreen.self){
+            let annoView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "Default")
+            annoView.pinTintColor = UIColor.green
+            annoView.animatesDrop = true
+            return annoView
         } else {
             let annoView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "Default")
             annoView.pinTintColor = UIColor.orange
@@ -146,6 +151,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         let TheBerkeleyHotelLocation = CLLocationCoordinate2D(latitude: 13.7498, longitude: 100.5427)
         createAnnotationFromLocation(location: TheBerkeleyHotelLocation, title: "TheBerkeleyHotel title", subTitle: "TheBerkeleyHotel subtitle")
         
+        let plattinum2Location = CLLocationCoordinate2D(latitude: 13.75055, longitude: 100.54108)
+        let plattinum2Anno = AnnoGreen(coordinate: plattinum2Location)
+        mMapView.addAnnotation(plattinum2Anno)
     }
 
     override func didReceiveMemoryWarning() {

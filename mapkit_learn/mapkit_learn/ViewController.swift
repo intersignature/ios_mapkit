@@ -55,6 +55,28 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         }
     }
     
+    func createAnnotationFromLocation(location: CLLocationCoordinate2D, title:String, subTitle:String) {
+        let annotation = MKPointAnnotation()
+        annotation.coordinate = location
+        annotation.title = title
+        annotation.subtitle = subTitle
+        mMapView.addAnnotation(annotation)
+        
+        
+    }
+    
+    func getPlaceMarkFromAddress(address:String, title:String, subTitle:String) {
+        CLGeocoder().geocodeAddressString(address) { (placemarks, error) in
+            if error == nil{
+                if let placemarks = placemarks?.first{
+                    if let location = placemarks.location{
+                        self.createAnnotationFromLocation(location: location.coordinate, title: title, subTitle: subTitle)
+                    }
+                }
+            }
+        }
+    }
+    
     func goToCenterLocation() {
         if let locMan = mLocationManager.location {
             let region = MKCoordinateRegionMakeWithDistance(locMan.coordinate, 400, 400)
@@ -77,6 +99,11 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         
         mMapView.showsUserLocation = true
         mLocationManager.startUpdatingLocation()
+        
+        speedLb.text = "0 km/h"
+        addressLb.text = ""
+        
+        getPlaceMarkFromAddress(address: "KMITL", title: "KMITL TITLE", subTitle: "KMITL SUBTITLE")
     }
 
     override func didReceiveMemoryWarning() {

@@ -84,6 +84,18 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         }
     }
     
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        if annotation.isKind(of: MKUserLocation.self){
+            return nil
+        } else {
+            let annoView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: "Default")
+            annoView.pinTintColor = UIColor.orange
+            annoView.animatesDrop = true
+            return annoView
+        }
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
@@ -104,6 +116,10 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         addressLb.text = ""
         
         getPlaceMarkFromAddress(address: "KMITL", title: "KMITL TITLE", subTitle: "KMITL SUBTITLE")
+        
+        let TheBerkeleyHotelLocation = CLLocationCoordinate2D(latitude: 13.7498, longitude: 100.5427)
+        createAnnotationFromLocation(location: TheBerkeleyHotelLocation, title: "TheBerkeleyHotel title", subTitle: "TheBerkeleyHotel subtitle")
+        
     }
 
     override func didReceiveMemoryWarning() {

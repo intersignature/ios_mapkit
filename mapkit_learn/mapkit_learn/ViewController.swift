@@ -13,6 +13,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
 
     @IBOutlet weak var mMapView: MKMapView!
     @IBOutlet weak var speedLb: UILabel!
+    @IBOutlet weak var addressLb: UILabel!
     
     var mLocationManager = CLLocationManager()
     
@@ -27,12 +28,31 @@ class ViewController: UIViewController, CLLocationManagerDelegate, MKMapViewDele
         
         let region:MKCoordinateRegion = MKCoordinateRegionMake(location, span)
         mMapView.setRegion(region, animated: true)
-        mMapView.mapType = .hybrid
         mMapView.showsCompass = true
         mMapView.showsScale = true
         
         let speed = myLocation.speed * 3.6
         speedLb.text = "\(speed) km/hr"
+        
+        //get address
+        CLGeocoder().reverseGeocodeLocation(myLocation) { (placemark, error) in
+            if error == nil {
+                if let placemark = placemark?.first{
+                    let subthroughface = placemark.subThoroughfare != nil ? placemark.subThoroughfare : ""
+                    let throughface = placemark.thoroughfare != nil ? placemark.thoroughfare : ""
+                    let subLocality = placemark.subLocality != nil ? placemark.subLocality : ""
+                    let locality = placemark.locality != nil ? placemark.locality : ""
+                    let administrativeArea = placemark.administrativeArea != nil ? placemark.administrativeArea : ""
+                    let country = placemark.country != nil ? placemark.country : ""
+                    let postalCode = placemark.postalCode != nil ? placemark.postalCode : ""
+                    
+                    let locationAddress = "\(subthroughface!) \(throughface!) \(subLocality!) \(locality!) \(administrativeArea!) \(country!) \(postalCode!)"
+                    print(locationAddress)
+                    
+                    self.addressLb.text = locationAddress
+                }
+            }
+        }
     }
     
     func goToCenterLocation() {
